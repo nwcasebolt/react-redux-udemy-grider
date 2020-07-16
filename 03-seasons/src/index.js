@@ -1,25 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SeasonDisplay from './SeasonDisplay';
 
 class App extends React.Component {
 
-    // React does not require an explicit definition of constructor
-    constructor(props) {
-        super(props);
+    state = { lat: null, errorMessage: '' };
 
-        // this is the only time we do direct assignment to state
-        this.state = { lat: null, errorMessage: '' };
-
+    componentDidMount() {
         window.navigator.geolocation.getCurrentPosition(
-            (position) => {
-
-                // setState extended from React.Component, ONLY way to change state
-                this.setState({ lat: position.coords.latitude })
-            },
-            (err) => {
-                this.setState({ errorMessage: err.message })
-            }
-        );
+            (position) => this.setState({ lat: position.coords.latitude }),
+            (err) => this.setState({ errorMessage: err.message })
+        )
     }
 
     // React requires a render method
@@ -29,7 +20,7 @@ class App extends React.Component {
         }
 
         if (!this.state.errorMessage && this.state.lat) {
-            return <div>Latitude: {this.state.lat}</div>;
+            return <SeasonDisplay lat={this.state.lat} />;
         }
 
         return <div>Loading!</div>;
